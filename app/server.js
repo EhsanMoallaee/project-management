@@ -1,7 +1,7 @@
 module.exports = class Application {
     #express = require('express');
     #app = this.#express();
-    constructor(PORT, DB_URL)   {
+    constructor(PORT, DB_URL) {
         this.configDatabase(DB_URL);
         this.configApplication();
         this.createServer(PORT);
@@ -9,22 +9,8 @@ module.exports = class Application {
         this.errorHandler();
     }
 
-    configApplication(){
-        const path = require("path");
-        this.#app.use(this.#express.json());
-        this.#app.use(this.#express.urlencoded({ extended: true }));
-        this.#app.use(this.#express.static(path.join(__dirname, '..', 'public')));
-    }
 
-    createServer(PORT){
-        const http = require('http');
-        const server = http.createServer(this.#app);
-        server.listen(PORT, () => {
-            console.log(`Server is runnig on : http://localhost:${PORT}`);
-        });
-    }
-
-    configDatabase(DB_URL){
+    configDatabase(DB_URL) {
         const mongoose = require('mongoose');
         mongoose.connect(DB_URL).then(
             () =>  { console.log('Connected to MongoDB successfully') },
@@ -32,7 +18,36 @@ module.exports = class Application {
         )
     }
 
-    errorHandler(){
+    configApplication() {
+        const path = require("path");
+        this.#app.use(this.#express.json());
+        this.#app.use(this.#express.urlencoded({ extended: true }));
+        this.#app.use(this.#express.static(path.join(__dirname, '..', 'public')));
+    }
+
+    createServer(PORT) {
+        const http = require('http');
+        const server = http.createServer(this.#app);
+        server.listen(PORT, () => {
+            console.log(`Server is runnig on : http://localhost:${PORT}`);
+        });
+    }
+
+    createRoutes() {
+        const router = require('./router/router');
+        this.#app.get('/', (req, res, next) => {
+            return res.json({
+                message: 'First step'
+            })
+        });
+        this.#app.use(router, (err, req, res, next) => {
+            if(err) {
+                next(err)
+            }
+        });
+    }
+
+    errorHandler() {
         this.#app.use((req, res, next) => {
             return res.status(404).json({
                 status: 404,
@@ -43,20 +58,11 @@ module.exports = class Application {
         this.#app.use((err, req, res, next) => {
             const status = err?.status || 500;
             const message = err?.message || 'Internal server error';
-            return res.status(ststus).json({
+            return res.status(status).json({
                 status,
                 success: false,
                 message
             })
         })
     }
-
-    createRoutes(){
-        this.#app.get('/', (req, res, next) => {
-            return res.json({
-                message: 'First step'
-            })
-        })
-    }
-
 }
