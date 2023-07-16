@@ -10,6 +10,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EhsanMoallaee/project-management.git"
+  },
+  "homepage": "https://github.com/EhsanMoallaee/project-management.git",
   "dependencies": {
     "express": "^4.18.2",
     "mongoose": "^7.3.4"

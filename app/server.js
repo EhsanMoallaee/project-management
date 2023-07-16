@@ -26,10 +26,10 @@ module.exports = class Application {
 
     configDatabase(DB_URL){
         const mongoose = require('mongoose');
-        mongoose.connect(DB_URL, (err) => {
-            if(err) throw err;
-            return console.log('Connected to MongoDB successfully');
-        })
+        mongoose.connect(DB_URL).then(
+            () =>  { console.log('Connected to MongoDB successfully') },
+            err => console.log(err.message)
+        )
     }
 
     errorHandler(){
@@ -54,7 +54,7 @@ module.exports = class Application {
     createRoutes(){
         this.#app.get('/', (req, res, next) => {
             return res.json({
-                message: 'Firs step'
+                message: 'First step'
             })
         })
     }
