@@ -38,6 +38,10 @@ const UserSchema = new mongoose.Schema({
         type: [mongoose.Types.ObjectId],
         default: [],
     },
+    token: {
+        type: String,
+        default: ''
+    }
 }, { timestamps: true });
 
 const UserModel = mongoose.model('user', UserSchema);

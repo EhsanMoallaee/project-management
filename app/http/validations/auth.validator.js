@@ -24,8 +24,24 @@ function registerValidator() {
     ]
 }
 
+function loginValidator() {
+    return [
+        body('username').custom((value, ctx) => {
+            if(value) {
+                const usernameRegex = /^[a-z]+[a-z0-9\_\.]{4,22}/gi ;
+                if(usernameRegex.test(value)) {
+                    return true;
+                } 
+                throw 'Wrong username';
+            }
+        }),
+        body('password').isLength({ min: 8, max: 16}).withMessage('Password must have atleast 8 and maximum 16 characters')
+    ]
+}
+
 module.exports = {
-    registerValidator
+    registerValidator,
+    loginValidator
 };
 
 // 'fa-IR': /^(\+?98[\-\s]?|0)9[0-39]\d[\-\s]?\d{3}[\-\s]?\d{4}$/
