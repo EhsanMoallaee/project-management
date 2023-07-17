@@ -5,6 +5,15 @@ function tokenGenerator(payload) {
     return token;
 }
 
+function verifyToken(token) {
+    const verifyTokenResult = jwt.verify(token, process.env.SECRET_KEY);
+    if(!verifyTokenResult.username) {
+        throw { status: 401, message: 'Please login first' };
+    }
+    return verifyTokenResult;
+}
+
 module.exports = {
     tokenGenerator,
+    verifyToken
 }

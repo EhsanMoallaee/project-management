@@ -23,7 +23,6 @@ class AuthController {
 
     async login(req, res, next) {
         const { username, password } = req.body;
-        console.log(req.headers);
         const user = await UserModel.findOne({ username });
         if(!user) {
             return next({ status: 401, message: 'Username or password is wrong' });
