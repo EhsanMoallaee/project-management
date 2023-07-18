@@ -10,6 +10,7 @@ const checkLogin = async (req, res, next) => {
     if(!token) return next(authError);
     
     const result = verifyToken(token);
+    if(!result) return next(authError);
     const user = await UserModel.findOne({ username: result.username }, { password: 0});
     if(!user) return next(authError);
     req.user = user;

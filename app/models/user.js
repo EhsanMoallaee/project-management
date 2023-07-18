@@ -22,6 +22,11 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
+    profile_image: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
     skills: {
         type: [String],
         default: [],

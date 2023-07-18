@@ -6,11 +6,13 @@ function tokenGenerator(payload) {
 }
 
 function verifyToken(token) {
-    const verifyTokenResult = jwt.verify(token, process.env.SECRET_KEY);
-    if(!verifyTokenResult.username) {
-        throw { status: 401, message: 'Please login first' };
-    }
-    return verifyTokenResult;
+    return jwt.verify(token, process.env.SECRET_KEY, (err, data ) => {
+        if (err) {
+            return false;
+        } else {
+            return data
+        }
+    })
 }
 
 module.exports = {
