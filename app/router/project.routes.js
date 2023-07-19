@@ -8,5 +8,6 @@ const { expressUploadFile } = require('../modules/express-fileUpload');
 const projectRouter = Router();
 
 projectRouter.post('/create', [checkLogin, fileUpload(), expressUploadFile, createProjectValidation(), expressValidatorMapper], ProjectController.createProject);
+projectRouter.get('/get-projects', checkLogin, ProjectController.getAllProject);
 
 module.exports =  projectRouter;
