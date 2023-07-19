@@ -23,6 +23,10 @@ const ProjectSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    tags: {
+        type: [String],
+        default: []
+    },
 }, { timestamps: true });
 
 const ProjectModel = mongoose.model('project', ProjectSchema);
