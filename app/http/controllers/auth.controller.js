@@ -13,7 +13,7 @@ class AuthController {
             email,
             password: hashed_password,
             mobile
-        }).then(user => {return res.status(200).json(user)})
+        }).then(user => {return res.status(201).json(user)})
         .catch(err => {
             if(err?.code === 11000) {
                 return next({ status: 400, message: `Duplicate value in path: ${Object.keys(err.keyPattern)} with value : ${Object.values(err.keyValue)}`})
