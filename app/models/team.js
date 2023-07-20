@@ -10,8 +10,13 @@ const TeamSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        unique: true,
         required: true,
+        unique: true,
+        sparse: true,
+    },
+    projects: {
+        type: [mongoose.Types.ObjectId],
+        default: []
     },
     users: {
         type: [mongoose.Types.ObjectId],

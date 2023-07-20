@@ -7,7 +7,7 @@ class ProjectController {
         const { title, text, image, tags } = req.body;
         const owner = req.user._id;
         const project = await ProjectModel.create({ title, text, owner, image, tags });
-        if(!project) next({ status: 400, message: 'Project creation failed'})
+        if(!project) next({ status: 400, message: 'Project creation failed'});
         return res.status(201).json({
             status: 201,
             success: true,
