@@ -2,7 +2,7 @@ const { ProjectModel } = require("../../models/project");
 
 class ProjectController {
 
-    async createProject(req, res, next) {
+    createProject = async (req, res, next) => {
         const { title, text, image, tags } = req.body;
         const owner = req.user._id;
         const project = await ProjectModel.create({ title, text, owner, image, tags });
@@ -15,7 +15,7 @@ class ProjectController {
         });
     }
 
-    async getAllProject(req, res, next) {
+    getAllProject = async (req, res, next) => {
         const owner = req.user._id;
         const projects = await ProjectModel.find({ owner });
         if(!projects || projects.length == 0) return next({ status: 404, message: 'Projects related to this user not found' })
@@ -26,7 +26,7 @@ class ProjectController {
         })
     }
 
-    async getProjectByID(req, res, next) {
+    getProjectByID = async (req, res, next) => {
         const owner = req.user._id;
         const projectId = req.params.id;
         const project = await ProjectModel.findOne({ owner, _id: projectId });
@@ -38,7 +38,7 @@ class ProjectController {
         })
     }
 
-    async removeProject(req, res, next) {
+    removeProject = async(req, res, next) => {
         const owner = req.user._id;
         const projectId = req.params.id;
         const deleteProjectResult = await ProjectModel.findOneAndDelete({ owner, _id: projectId });
