@@ -38,7 +38,7 @@ class ProjectController {
         })
     }
 
-    removeProject = async(req, res, next) => {
+    removeProject = async (req, res, next) => {
         const owner = req.user._id;
         const projectId = req.params.id;
         const deleteProjectResult = await ProjectModel.findOneAndDelete({ owner, _id: projectId });
@@ -56,15 +56,34 @@ class ProjectController {
         
     }
 
+    updateProject = async (req, res, next) => {
+        const projectId = req.params.id;
+        const owner = req.user._id;
+        const data = { ...req.body };
+        Object.entries(data).forEach(([key, value]) => {
+            if(!['title', 'text', 'tags'].includes(key)) delete data[key];
+            if(['', ' ', 0, null, undefined, NaN].includes(value)) delete data[key];            
+            if(key == 'tags' && Array.isArray(data['tags'])) { // or: data['tags].constructor === Array?
+                data['tags'] = data['tags'].filter(item => {
+                    if (!['', ' ', 0, null, undefined, NaN].includes(item.trim())) return item;
+                })
+                if (data['tags'].length == 0) delete data['tags'];
+            }
+        });
+        const updateResult = await ProjectModel.findOneAndUpdate({ owner, _id: projectId } , { $set: data });
+        if(!updateResult) return next({ status: 404, message: 'Project not found'});
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: 'Project updated successfully'
+        })
+    }
+
     getAllProjectsOfTeam() {
 
     }
 
     getProjectsOfUser() {
-
-    }
-
-    updateProject() {
 
     }
 }
