@@ -9,5 +9,7 @@ const projectRouter = Router();
 
 projectRouter.post('/create', [checkLogin, fileUpload(), expressUploadFile, createProjectValidation(), expressValidatorMapper], ProjectController.createProject);
 projectRouter.get('/get-projects', checkLogin, ProjectController.getAllProject);
+projectRouter.get('/get-project-byId/:id', checkLogin, ProjectController.getProjectByID);
+projectRouter.delete('/delete-project/:id', checkLogin, ProjectController.removeProject);
 
 module.exports =  projectRouter;
