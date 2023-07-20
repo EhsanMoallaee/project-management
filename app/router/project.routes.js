@@ -13,5 +13,6 @@ projectRouter.get('/get-projects', checkLogin, ProjectController.getAllProject);
 projectRouter.get('/get-project-byId/:id', [checkLogin, idValidator(), expressValidatorMapper], ProjectController.getProjectByID);
 projectRouter.delete('/delete/:id', [checkLogin, idValidator(), expressValidatorMapper], ProjectController.removeProject);
 projectRouter.patch('/update/:id', [checkLogin, idValidator(), expressValidatorMapper], ProjectController.updateProject);
+projectRouter.patch('/update-projectImage/:id', [checkLogin, fileUpload(), expressUploadFile, idValidator(), expressValidatorMapper], ProjectController.updateProjectImage);
 
 module.exports =  projectRouter;

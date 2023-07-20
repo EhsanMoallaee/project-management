@@ -1,12 +1,11 @@
 const { UserModel } = require("../../models/user");
-const path = require('path')
+const { createLink } = require("../../modules/createLink");
 
 class UserController {
 
     getProfile(req, res, next) {
         const user = req.user;
-        const imageAddress = (user.profile_image).replace(/\\/gm, "/");
-        user.profile_image = req.protocol + '://' + req.get('host') + '/' + imageAddress;
+        user.profile_image = createLink(req, user.profile_image);
         if(!user) return next({status: 404, message: 'User not found!'});
         return res.status(200).json({
             status: 200,

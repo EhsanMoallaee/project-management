@@ -1,4 +1,5 @@
 const { ProjectModel } = require("../../models/project");
+const { createLink } = require("../../modules/createLink");
 
 class ProjectController {
 
@@ -18,7 +19,10 @@ class ProjectController {
     getAllProject = async (req, res, next) => {
         const owner = req.user._id;
         const projects = await ProjectModel.find({ owner });
-        if(!projects || projects.length == 0) return next({ status: 404, message: 'Projects related to this user not found' })
+        if(!projects || projects.length == 0) return next({ status: 404, message: 'Projects related to this user not found' });
+        for (const project of projects) {
+            project.image = createLink(req, project.image);
+        }
         return res.status(200).json({
             status: 200,
             success: true,
@@ -30,6 +34,8 @@ class ProjectController {
         const owner = req.user._id;
         const projectId = req.params.id;
         const project = await ProjectModel.findOne({ owner, _id: projectId });
+        console.log(project.image);
+        project.image = createLink(req, project.image);
         if(!project) return next({ status: 404, message: 'Project with this id which related to this user not found' });
         return res.status(200).json({
             status: 200,
@@ -63,7 +69,7 @@ class ProjectController {
         Object.entries(data).forEach(([key, value]) => {
             if(!['title', 'text', 'tags'].includes(key)) delete data[key];
             if(['', ' ', 0, null, undefined, NaN].includes(value)) delete data[key];            
-            if(key == 'tags' && Array.isArray(data['tags'])) { // or: data['tags].constructor === Array?
+            if(key == 'tags' && Array.isArray(data['tags'])) { // or: data['tags].constructor === Array
                 data['tags'] = data['tags'].filter(item => {
                     if (!['', ' ', 0, null, undefined, NaN].includes(item.trim())) return item;
                 })
@@ -76,6 +82,20 @@ class ProjectController {
             status: 200,
             success: true,
             message: 'Project updated successfully'
+        })
+    }
+
+    async updateProjectImage(req, res, next) {
+        const projectId = req.params.id;
+        const { image } = req.body;
+        const owner = req.user._id;
+        const updatedProject = await ProjectModel.findOneAndUpdate({ owner, _id: projectId}, { $set: { image }}, { new: true });
+        if(!updatedProject) return next({ status: 404, message: 'Project not found'});
+        return res.status(201).json({
+            status: 201,
+            success: true,
+            message: 'Update project image successfully',
+            updatedProject
         })
     }
 
