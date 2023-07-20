@@ -1,4 +1,5 @@
 const { TeamModel } = require("../../models/team");
+const { UserModel } = require("../../models/user");
 
 class TeamController {
 
@@ -60,6 +61,35 @@ class TeamController {
             status: 200,
             success: true,
             message: 'Team deleted successfully'
+        })
+    }
+
+    inviteUserToTeam = async(req, res, next) => {
+        const { username, teamId } = req.params;
+        const userId = req.user._id;
+        const team = await TeamModel.findOne({
+            _id: teamId,
+            $or: [ { owner: userId }, { users: userId }]
+        });
+        if(!team) return next({ status: 404, message: 'Invitation team not found'});
+        let user = await UserModel.findOne({username});
+        if(!user) return next({ status: 404, message: 'Invited user not found'});
+        if(user._id.equals(userId)) return next({ status: 403, message: 'You can\'t invite yourself to a team'});
+        const isAlreadyInvited = !!(user.invitations).find(item => item.teamId == teamId);
+        if(isAlreadyInvited) {
+            return next({ status: 400, message: 'This user has invited to this team before'});
+        }
+        const invitation = {
+            teamId,
+            inviter: userId.username
+        }
+        user.invitations.push(invitation);
+        user = await user.save();
+        return res.status(200).json({
+            status: 200,
+            success: true,
+            message: 'User invite request sent successfully',
+            user
         })
     }
 }

@@ -1,8 +1,15 @@
 const mongoose = require('mongoose');
 
+const InvitationsSchema = new mongoose.Schema({
+    teamId: { type: mongoose.Types.ObjectId },
+    inviter: { type:String },
+    request_date: { type: Date, default: new Date() },
+    status: { type: String, enum : ['pending' , 'accepted' , 'rejected'], default: 'pending' }
+});
+
 const UserSchema = new mongoose.Schema({
     first_name: {
-        type: String,
+        type: String
     },
     last_name: {
         type: String,
@@ -11,11 +18,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: true,
+        lowercase: true,
     },
     email: {
         type: String,
         unique: true,
         required: true,
+        lowercase: true,
     },
     mobile: {
         type: String,
@@ -43,6 +52,7 @@ const UserSchema = new mongoose.Schema({
         type: [mongoose.Types.ObjectId],
         default: [],
     },
+    invitations: [ InvitationsSchema ],
     token: {
         type: String,
         default: ''

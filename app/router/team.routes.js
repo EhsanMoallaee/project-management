@@ -11,5 +11,6 @@ teamRouter.get("/get-teams", [checkLogin], TeamController.getAllTeams);
 teamRouter.get("/get-team-byId/:id", [checkLogin, idValidator(), expressValidatorMapper], TeamController.getTeamById);
 teamRouter.get("/get-my-teams", [checkLogin], TeamController.getMyTeams);
 teamRouter.delete("/delete/:id", [checkLogin, idValidator(), expressValidatorMapper], TeamController.removeTeam);
+teamRouter.get("/invite-user/:teamId/:username", [checkLogin], TeamController.inviteUserToTeam);
 
 module.exports = teamRouter;
