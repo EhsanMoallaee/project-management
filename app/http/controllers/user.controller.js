@@ -14,6 +14,17 @@ class UserController {
         });
     }
 
+    getAllInvitations = async (req, res, next) => {
+        const userId = req.user._id;
+        const {invitations} = await UserModel.findById(userId).select({invitations: 1, _id: 0});
+        if(!invitations || invitations.length == 0) return next({status: 404, message: 'You haven\'t any invitation'});
+        return res.status(200).json({
+            status: 200,
+            success: true,
+            invitations
+        })
+    }
+
     async editProfile(req, res, next) {
         const userId = req.user._id;
         let data = req.body;

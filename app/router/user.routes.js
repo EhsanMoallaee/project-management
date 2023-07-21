@@ -13,5 +13,6 @@ userRouter.post(
     [upload_multer.single('image'), imageValidator(), expressValidatorMapper, checkLogin],
     UserController.uploadProfileImage
 );
+userRouter.get("/invitations", checkLogin, UserController.getAllInvitations);
 
 module.exports = userRouter;
