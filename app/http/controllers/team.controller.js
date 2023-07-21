@@ -88,8 +88,7 @@ class TeamController {
         return res.status(200).json({
             status: 200,
             success: true,
-            message: 'User invite request sent successfully',
-            user
+            message: 'User invite request sent successfully'
         })
     }
 }

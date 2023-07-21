@@ -55,6 +55,23 @@ class UserController {
         })
     }
 
+    acceptOrRejectInvitation = async(req, res, next) => {
+        const userId = req.user._id;
+        const {invitationId, newStatus} = req.params;
+        if(!['accepted', 'rejected'].includes(newStatus)) return next({ status: 400, message: 'New status is wrong' });
+        const invitation = await UserModel.findOneAndUpdate(
+            { _id: userId, invitations : { $elemMatch: {_id: invitationId, status : 'pending' } }},
+            { $set: { 'invitations.$.status': newStatus }},
+            { new: true }
+        );
+        if(!invitation) return next({status: 404, message: 'Invitation with pending status not found!'});
+        return res.status(201).json({
+            status: 201,
+            success: true,
+            message: `This invitation status successfully changed to ${newStatus}`
+        })
+    }
+
     async editProfile(req, res, next) {
         const userId = req.user._id;
         let data = req.body;

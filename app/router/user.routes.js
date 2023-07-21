@@ -15,5 +15,6 @@ userRouter.post(
 );
 userRouter.get("/invitations", checkLogin, UserController.getAllInvitations);
 userRouter.get("/invitations-by-status/:status", checkLogin, UserController.getInvitationsByStatus);
+userRouter.get("/accept-reject-invitation/:invitationId/:newStatus", checkLogin, UserController.acceptOrRejectInvitation);
 
 module.exports = userRouter;
