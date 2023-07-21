@@ -25,6 +25,36 @@ class UserController {
         })
     }
 
+    getInvitationsByStatus = async (req, res, next) => {
+        const userId = req.user._id;
+        const {status} = req.params;
+        const aggregateCondition = [
+            { $match: {_id: userId} },
+            { $project: { 
+                invitations: 1,
+                 _id: 0,
+                 invitations: {
+                    $filter: {
+                        input: '$invitations',
+                        as: 'invitation',
+                        cond: {
+                            $eq: ['$$invitation.status', status]
+                        }
+                    }
+                 }
+                }
+            },
+        ];
+        const searchResult = await UserModel.aggregate(aggregateCondition);
+        const invitations = searchResult?.[0]?.invitations || undefined;
+        if(!invitations || invitations.length == 0) return next({status: 404, message: 'You haven\'t any invitation'});
+        return res.status(200).json({
+            status: 200,
+            success: true,
+            invitations
+        })
+    }
+
     async editProfile(req, res, next) {
         const userId = req.user._id;
         let data = req.body;

@@ -14,5 +14,6 @@ userRouter.post(
     UserController.uploadProfileImage
 );
 userRouter.get("/invitations", checkLogin, UserController.getAllInvitations);
+userRouter.get("/invitations-by-status/:status", checkLogin, UserController.getInvitationsByStatus);
 
 module.exports = userRouter;
