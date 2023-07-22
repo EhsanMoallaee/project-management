@@ -1,20 +1,19 @@
 {
   "name": "project-management",
   "version": "1.0.0",
-  "description": "",
+  "description": "simple project management web app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ehsan_Moallaee",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EhsanMoallaee/project-management.git"
   },
-  "homepage": "https://github.com/EhsanMoallaee/project-management.git",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "dotenv": "^16.3.1",
