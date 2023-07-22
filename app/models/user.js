@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const InvitationsSchema = new mongoose.Schema({
     teamId: { type: mongoose.Types.ObjectId },
-    inviter: { type:String },
+    inviter: { type: String },
     request_date: { type: Date, default: new Date() },
     status: { type: String, enum : ['pending' , 'accepted' , 'rejected'], default: 'pending' }
 });

@@ -107,7 +107,7 @@ class TeamController {
         }
         const invitation = {
             teamId,
-            inviter: userId.username
+            inviter: user.username
         }
         user.invitations.push(invitation);
         user = await user.save();

@@ -34,7 +34,6 @@ class ProjectController {
         const owner = req.user._id;
         const projectId = req.params.id;
         const project = await ProjectModel.findOne({ owner, _id: projectId });
-        console.log(project.image);
         project.image = createLink(req, project.image);
         if(!project) return next({ status: 404, message: 'Project with this id which related to this user not found' });
         return res.status(200).json({

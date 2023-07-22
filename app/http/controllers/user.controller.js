@@ -16,8 +16,59 @@ class UserController {
 
     getAllInvitations = async (req, res, next) => {
         const userId = req.user._id;
-        const {invitations} = await UserModel.findById(userId).select({invitations: 1, _id: 0});
-        if(!invitations || invitations.length == 0) return next({status: 404, message: 'You haven\'t any invitation'});
+        const searchResult = await UserModel.aggregate([
+            {
+                $match: { _id: userId }
+            },
+            {
+                $project: { _id: 0, invitations: 1 }
+            },
+            {
+                $unwind: '$invitations'
+            },
+            {
+                $project: { 'invitations._id': 0 }
+            },
+            {
+                $lookup: {
+                    from: 'teams',
+                    localField: 'invitations.teamId',
+                    foreignField: '_id',
+                    as: 'invitations.team',
+                    pipeline : [
+                        { $project : { _id: 0, name: 1, description: 1, projects: 1 } }
+                    ],
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'invitations.inviter',
+                    foreignField: 'username',
+                    as: 'invitations.inviter',
+                    pipeline : [
+                        { $project : { _id: 0, username: 1, mobile: 1, email: 1 } }
+                    ],
+                }
+            },
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: 'team.projects',
+                    foreignField: '_id',
+                    as: 'team.projects',
+                    pipeline : [
+                        { $project : { _id: 0, title: 1, text: 1 } }
+                    ],
+                }
+            },
+            {
+                $project: {team: 0, 'invitations.teamId': 0}
+            },
+        ]);
+        let invitations = [];
+        if(!searchResult || searchResult.length == 0) return next({status: 404, message: 'You haven\'t any invitation'});
+        searchResult.forEach(invitation => { invitations.push(invitation.invitations)});
         return res.status(200).json({
             status: 200,
             success: true,
@@ -30,18 +81,19 @@ class UserController {
         const {status} = req.params;
         const aggregateCondition = [
             { $match: {_id: userId} },
-            { $project: { 
-                invitations: 1,
-                 _id: 0,
-                 invitations: {
-                    $filter: {
-                        input: '$invitations',
-                        as: 'invitation',
-                        cond: {
-                            $eq: ['$$invitation.status', status]
+            { 
+                $project: { 
+                    invitations: 1,
+                    _id: 0,
+                    invitations: {
+                        $filter: {
+                            input: '$invitations',
+                            as: 'invitation',
+                            cond: {
+                                $eq: ['$$invitation.status', status]
+                            }
                         }
                     }
-                 }
                 }
             },
         ];

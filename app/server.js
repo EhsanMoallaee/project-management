@@ -40,7 +40,7 @@ module.exports = class Application {
                 message: 'First step'
             })
         });
-        // this.#app.use(router)
+        
         this.#app.use(router, async (err, req, res, next) => {
             if(err) {
                 next(err)
