@@ -3,8 +3,8 @@ const { TeamModel } = require("../../models/team");
 
 function createTeamValidator() {
     return [
-        body('name').isLength({ min: 5, max: 25}).withMessage('Team name can\'t be less than 5 characters'),
-        body('description').isLength({ min: 10, max: 100}).withMessage('Team description can\'t be less than 10 characters'),
+        body('name').trim().isLength({ min: 5, max: 25}).withMessage('Team name can\'t be less than 5 characters'),
+        body('description').trim().isLength({ min: 10, max: 100}).withMessage('Team description can\'t be less than 10 characters'),
         body('username').custom(async (username) => {
             const usernameRegex = /^[a-z]+[a-z0-9\_\.]{4,}$/gim ;
             if(usernameRegex.test(username)) {
@@ -14,7 +14,6 @@ function createTeamValidator() {
             } else {
                 throw ('Username can\'t be less than 5 characters and just can have alphabets,numbers,. and _');
             }
-            
         }),
     ]
 }

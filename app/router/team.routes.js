@@ -7,10 +7,11 @@ const expressValidatorMapper = require('../http/middlewares/expressValidatorMapp
 const teamRouter = Router();
 
 teamRouter.post("/create", [checkLogin, createTeamValidator(), expressValidatorMapper], TeamController.createTeam);
+teamRouter.patch("/update/:id", [checkLogin, idValidator(), createTeamValidator(), expressValidatorMapper], TeamController.updateTeam);
+teamRouter.delete("/delete/:id", [checkLogin, idValidator(), expressValidatorMapper], TeamController.removeTeam);
+teamRouter.get("/invite-user/:teamId/:username", [checkLogin], TeamController.inviteUserToTeam);
 teamRouter.get("/get-teams", [checkLogin], TeamController.getAllTeams);
 teamRouter.get("/get-team-byId/:id", [checkLogin, idValidator(), expressValidatorMapper], TeamController.getTeamById);
 teamRouter.get("/get-my-teams", [checkLogin], TeamController.getMyTeams);
-teamRouter.delete("/delete/:id", [checkLogin, idValidator(), expressValidatorMapper], TeamController.removeTeam);
-teamRouter.get("/invite-user/:teamId/:username", [checkLogin], TeamController.inviteUserToTeam);
 
 module.exports = teamRouter;

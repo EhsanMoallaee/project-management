@@ -7,7 +7,7 @@ const expressValidatorMapper = require('../http/middlewares/expressValidatorMapp
 const userRouter = Router();
 
 userRouter.get("/profile", checkLogin, UserController.getProfile);
-userRouter.patch("/profile", checkLogin, UserController.editProfile);
+userRouter.patch("/update", checkLogin, UserController.editProfile);
 userRouter.post(
     "/profile-image",
     [upload_multer.single('image'), imageValidator(), expressValidatorMapper, checkLogin],

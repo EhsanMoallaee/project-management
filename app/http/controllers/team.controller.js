@@ -1,5 +1,6 @@
 const { TeamModel } = require("../../models/team");
 const { UserModel } = require("../../models/user");
+const { idValidator } = require("../validations/id.validator");
 
 class TeamController {
 
@@ -89,6 +90,28 @@ class TeamController {
             status: 200,
             success: true,
             message: 'User invite request sent successfully'
+        })
+    }
+
+    updateTeam = async (req, res, next) => {
+        const data = req.body;
+        const userId = req.user._id;
+        const teamId = req.params.id;
+        Object.keys(data).forEach(key => {
+            data[key] = data[key].trim()
+            if(!data[key] || data[key].length == 0) delete data[key];
+            if(['', ' ', undefined, null, NaN].includes(data[key])) delete data[key];
+        });
+        const team = await TeamModel.findOneAndUpdate(
+            { _id: teamId, owner: userId },
+            { $set: data},
+            { new: true }
+        );
+        if(!team) return next({status: 404, message: 'Team not found'})
+        return res.status(201).json({
+            status: 201,
+            success: true,
+            message: 'Team updated successfully'
         })
     }
 }
